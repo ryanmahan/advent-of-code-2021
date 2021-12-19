@@ -39,17 +39,36 @@ int main() {
   int max = *std::max_element(std::begin(positions), std::end(positions));
   int min = *std::min_element(std::begin(positions), std::end(positions));
   int current = 0, lowest = std::numeric_limits<int>::max(), ideal = -1;
+  int lower = std::numeric_limits<int>::max(), higher = std::numeric_limits<int>::max();
   std::cout << "min " << min << " max " << max << "\n";
   // sad brute force method
-  for (int i = max ; i > min ; i--) {
-    current = get_fuel_cost_part2(positions, i);
-    if (current <= lowest) {
-      lowest = current;
-      ideal = i;
-      // std::cout << lowest << " " << current << " " << i << "\n";
+  
+  // for (int i = max ; i > min ; i--) {
+  //   current = get_fuel_cost_part2(positions, i);
+  //   if (current <= lowest) {
+  //     lowest = current;
+  //     ideal = i;
+  //     // std::cout << lowest << " " << current << " " << i << "\n";
+  //   }
+  //   std::cout << lowest << " " << current << " " << i << "\n";
+  // }
+
+  // happier binary search method
+  int step = positions.size() / 2;
+  int alpha = step;
+  current = get_fuel_cost_part2(positions, step);
+  while (alpha != 1) {
+    alpha = alpha / 2;
+    lower = get_fuel_cost_part2(positions, step - alpha);
+    higher = get_fuel_cost_part2(positions, step + alpha);
+    if (lower < current) {
+      current = lower;
+      step = step - alpha;
+    } else if (higher < current) {
+      current = higher;
+      step = step + alpha;
     }
-    std::cout << lowest << " " << current << " " << i << "\n";
   }
-  std::cout << lowest << ideal;
+  std::cout << current;
   
 }
