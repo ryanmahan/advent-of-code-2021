@@ -46,26 +46,34 @@ std::vector<std::pair<int, int>> findLowestPoints(std::vector<std::vector<int>> 
   return lowestPoints;
 }
 
+std::vector<std::pair<int, int>> traversed;
+
 int getBasinSize(std::pair<int, int> point, std::vector<std::vector<int>> points) {
   // base case, 9 or ?all surrounding numbers are smaller? return one
   // otherwise call getBasinSize on all surrounding non-nine numbers that are larger
   int i = point.first;
   int j = point.second;
   int height = safeGetValue(points, i, j);
-
+  int size = 1;
+  traversed.push_back(point);
   for (int offset : OFFSETS) {
     int nearby = safeGetValue(points, i + offset, j);
-    if (nearby > height && nearby < 9) {
-      return 1 + getBasinSize({ i +offset, j }, points);
+    std::pair<int, int> nearbyCoordinates(i+offset, j);
+    std::vector<std::pair<int, int>>::iterator traversedIter = std::find(traversed.begin(), traversed.end(), nearbyCoordinates);
+    if (traversedIter == traversed.end() && nearby < 9 && nearby > height) {
+      size += getBasinSize({ i +offset, j }, points);
     }
   }
   for (int offset : OFFSETS) {
     int nearby = safeGetValue(points, i, j + offset);
-    if (nearby > height && nearby < 9) {
-      return 1 + getBasinSize({ i, j + offset}, points);
+    std::pair<int, int> nearbyCoordinates(i, j+offset);
+    std::vector<std::pair<int, int>>::iterator traversedIter = std::find(traversed.begin(), traversed.end(), nearbyCoordinates);
+    if (traversedIter == traversed.end() && nearby < 9 && nearby > height) {
+      size += getBasinSize({ i, j + offset}, points);
     }
   }
-  return 1;
+  std::cout << "Traversed size: " << traversed.size() << std::endl;
+  return size;
 }
 
 int main() {
