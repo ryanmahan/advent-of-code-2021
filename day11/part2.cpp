@@ -11,15 +11,13 @@ using namespace cavern;
 int count = 0;
 
 void flashCallback() {
-  std::cout << "Flash cb";
   count++;
 }
 
 int main() {
   Grid<Octopus> grid;
-  std::cout << "Hello";
   int rows, cols;
-  grid.readFile("data.txt");
+  grid.readFile("test.txt");
   GridSize gridSize = grid.size();
   std::cout << "Grid Size " << gridSize.rows << " by " << gridSize.cols << std::endl;
   for (int i = 0 ; i < gridSize.rows ; i++) {
@@ -29,7 +27,8 @@ int main() {
       octo->setNeighbors(grid.getNeighbors(i, j, true));
     }
   }
-  for (int k = 0 ; k < 100 ; k++) {
+  for (int k = 0 ; k < 10000 ; k++) {
+    std::cout << k << std::endl;
     for (int i = 0 ; i < gridSize.rows ; i++) {
       for (int j = 0 ; j < gridSize.cols ; j++) {
         Octopus* octo = grid.safeGet(i, j);
@@ -42,9 +41,13 @@ int main() {
       for (int j = 0 ; j < gridSize.cols ; j++) {
         Octopus* octo = grid.safeGet(i, j);
         octo->newRound();
+        if (count >= 100) {
+          return 0;
+        }
       }
     }
-    std::cout << std::endl;
+    count = 0;
+    
   }
   std::cout << count << std::endl;
 }
