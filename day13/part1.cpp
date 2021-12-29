@@ -36,37 +36,28 @@ void print(std::vector<std::vector<bool>> dots) {
 }
 
 std::vector<std::vector<bool>> foldVertically(std::vector<std::vector<bool>> dots, int row) {
-  std::cout << "Fold vertically" << std::endl;
   int top = 0;
   int bottom = dots.size() - 1;
-  int larger = top > bottom ? top : bottom;
   
-  std::vector<std::vector<bool>> result(larger);
+  std::vector<std::vector<bool>> result;
   while (top != row && bottom != row) {
-    result.at(top) = combine(dots.at(top), dots.at(bottom));
+    result.push_back(combine(dots.at(top), dots.at(bottom)));
     top++;
     bottom--;
   }
-  std::cout << "RESULT" << std::endl;
-  print(result);
-  std::cout << std::endl;
   return result;
 }
 
 std::vector<std::vector<bool>> foldHorizontally(std::vector<std::vector<bool>> dots, int col) {
   int left = 0;
   int right = dots.at(0).size() - 1;
-  int larger = left > right ? left : right;
 
-  std::vector<std::vector<bool>> result(dots.size());
-  int row = 0;
-  while (left != col && right != col) {
-    std::vector<bool> leftSubvector(dots.at(row).begin(), dots.at(row).begin() + col);
-    std::vector<bool> rightSubvector(dots.at(row).begin() + col, dots.at(row).end());
+  std::vector<std::vector<bool>> result;
+  for (int i = 0 ; i < dots.size(); i++) {
+    std::vector<bool> leftSubvector(dots.at(i).begin(), dots.at(i).begin() + col);
+    std::vector<bool> rightSubvector(dots.at(i).begin() + col + 1, dots.at(i).end());
     std::reverse(rightSubvector.begin(), rightSubvector.end());
-    std::cout << leftSubvector.size() << " and " << rightSubvector.size();
-    result.at(row) = combine(leftSubvector, rightSubvector);
-    row++;
+    result.push_back(combine(leftSubvector, rightSubvector));
   }
   return result; 
 }
