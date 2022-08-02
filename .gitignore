@@ -23,3 +23,5 @@
 
 # Unignore all dirs
 !*/
+
+**/target
